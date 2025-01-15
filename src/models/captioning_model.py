@@ -14,7 +14,9 @@ class ImageCaptioningModel(nn.Module):
         outputs = self.Decoder(features, captions)
         return outputs
 
-    def caption(self, image, vocab, max_length=40):
+    def caption(self, image, vocab : dict, max_length=40):
+        self.eval()
+        inverse_dict = dict([(val, key) for key, val in vocab.items()])
         final_caption = []
         with torch.no_grad():
             features = self.Encoder(image).unsqueeze(0)
@@ -26,7 +28,7 @@ class ImageCaptioningModel(nn.Module):
 
                 final_caption.append(predicted.item())
                 features = self.Decoder.embed(predicted).unsqueeze(0)
-                if vocab.itos[predicted.item()] == END_TOKEN:
+                if inverse_dict[predicted.item()] == END_TOKEN:
                     break
 
-        return [vocab.itos[idx] for idx in final_caption]
+        return [inverse_dict[idx] for idx in final_caption]

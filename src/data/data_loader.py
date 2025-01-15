@@ -1,5 +1,6 @@
 from setup.HyperParams import *
 from setup.Modules import *
+from setup.Paths import DATA_DIR
 
 
 class ImageCaptionDataset(Dataset):
@@ -10,6 +11,7 @@ class ImageCaptionDataset(Dataset):
         self.all_captions = []
         self.preprocess_captions()
         self.vocab = self.build_vocab(self.mapping)
+        self.add_tokens()
         self.tokenizer = Tokenizer()
         self.tokenizer.fit_on_texts(self.all_captions)
         self.vocab_size = len(self.vocab)
@@ -35,17 +37,25 @@ class ImageCaptionDataset(Dataset):
         tokens = [cap.split() for caps in captions.values() for cap in caps]
         freq = Counter([item for sublist in tokens for item in sublist])
         vocab = {word: idx for idx, (word, count) in enumerate(freq.items()) if count >= 1}
+        vocab[START_TOKEN] = len(vocab)
         vocab[END_TOKEN] = len(vocab)
         vocab[PAD_TOKEN] = len(vocab)
+        with open(os.path.join(DATA_DIR, 'vocab.json'), "w") as vocab_file: 
+            json.dump(vocab, vocab_file)
         return vocab
+    
+
+    def add_tokens(self):
+        for key, captions in self.mapping.items():
+            for i in range(len(captions)):
+                captions[i] = START_TOKEN + " " + captions[i] + " " + END_TOKEN
+                self.all_captions.append(captions[i])
 
 
     def preprocess_captions(self):
         for key, captions in self.mapping.items():
             for i in range(len(captions)):
                 captions[i] = captions[i].lower().replace('.', '').replace(',', '').replace('!', '').replace('?', '').replace('\"', '')
-                captions[i] = START_TOKEN + " " + captions[i] + " " + END_TOKEN
-                self.all_captions.append(captions[i])
 
 
     def calculate_max_length(self):

@@ -3,5 +3,6 @@ IMAGES_FOLDER = r"F:\Programming\Python\Deep Learning\Image-Captioning\data\raw\
 CAPTIONS_FOLDER = r"F:\Programming\Python\Deep Learning\Image-Captioning\data\raw\captions.txt"
 CHECKPOINT_DIR = r"F:\Programming\Python\Deep Learning\Image-Captioning\src\training\checkpoints"
 RUNS_DIR = r"F:\Programming\Python\Deep Learning\Image-Captioning\src\training\runs"
+DATA_DIR = r"F:\Programming\Python\Deep Learning\Image-Captioning\data"
 
-__all__ = ['FOLDER_PATH', 'IMAGES_FOLDER', 'CAPTIONS_FOLDER', 'CHECKPOINT_DIR', 'RUNS_DIR']
+__all__ = ['FOLDER_PATH', 'IMAGES_FOLDER', 'CAPTIONS_FOLDER', 'CHECKPOINT_DIR', 'RUNS_DIR', 'DATA_DIR']
